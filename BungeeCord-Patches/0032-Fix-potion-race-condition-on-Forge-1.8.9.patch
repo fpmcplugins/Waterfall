@@ -1,4 +1,4 @@
-From 14aad6dcfb2d749c4d0dc58c49220b2c59896107 Mon Sep 17 00:00:00 2001
+From 1cd7701d75daa4942b046e1f7fc10368b2153c3a Mon Sep 17 00:00:00 2001
 From: Aaron Hill <aa1ronham@gmail.com>
 Date: Thu, 15 Sep 2016 22:38:37 +0200
 Subject: [PATCH] Fix potion race condition on Forge 1.8.9
@@ -33,7 +33,7 @@ index ac31e435..252389bd 100644
 +    // Waterfall end
  }
 diff --git a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
-index 17f2bf4c..043e8562 100644
+index fa34de48..346d8971 100644
 --- a/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 +++ b/protocol/src/main/java/net/md_5/bungee/protocol/Protocol.java
 @@ -17,6 +17,8 @@ import net.md_5.bungee.protocol.packet.EncryptionRequest;
@@ -45,9 +45,9 @@ index 17f2bf4c..043e8562 100644
  import net.md_5.bungee.protocol.packet.Handshake;
  import net.md_5.bungee.protocol.packet.KeepAlive;
  import net.md_5.bungee.protocol.packet.Kick;
-@@ -98,6 +100,29 @@ public enum Protocol
-                     map( ProtocolConstants.MINECRAFT_1_9, 0x0C ),
-                     map( ProtocolConstants.MINECRAFT_1_15, 0x0D )
+@@ -103,6 +105,31 @@ public enum Protocol
+                     map( ProtocolConstants.MINECRAFT_1_15, 0x0D ),
+                     map( ProtocolConstants.MINECRAFT_1_16, 0x0C )
              );
 +            // Waterfall start
 +            TO_CLIENT.registerPacket(
@@ -59,7 +59,8 @@ index 17f2bf4c..043e8562 100644
 +                    map(ProtocolConstants.MINECRAFT_1_12_1, 0x4F),
 +                    map(ProtocolConstants.MINECRAFT_1_13, 0x53),
 +                    map(ProtocolConstants.MINECRAFT_1_14, 0x59),
-+                    map(ProtocolConstants.MINECRAFT_1_15, 0x5A)
++                    map(ProtocolConstants.MINECRAFT_1_15, 0x5A),
++                    map(ProtocolConstants.MINECRAFT_1_16, 0x59)
 +            );
 +            TO_CLIENT.registerPacket(
 +                    EntityRemoveEffect.class,
@@ -69,7 +70,8 @@ index 17f2bf4c..043e8562 100644
 +                    map(ProtocolConstants.MINECRAFT_1_12_1, 0x33),
 +                    map(ProtocolConstants.MINECRAFT_1_13, 0x36),
 +                    map(ProtocolConstants.MINECRAFT_1_14, 0x38),
-+                    map(ProtocolConstants.MINECRAFT_1_15, 0x39)
++                    map(ProtocolConstants.MINECRAFT_1_15, 0x39),
++                    map(ProtocolConstants.MINECRAFT_1_16, 0x38)
 +            );
 +            // Waterfall end
              TO_CLIENT.registerPacket(
@@ -169,7 +171,7 @@ index 00000000..7ed2dc3a
 +    }
 +}
 diff --git a/proxy/src/main/java/net/md_5/bungee/UserConnection.java b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
-index 2c689edf..0c36ab52 100644
+index 76ab1481..fae9805c 100644
 --- a/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 +++ b/proxy/src/main/java/net/md_5/bungee/UserConnection.java
 @@ -1,7 +1,9 @@
@@ -194,10 +196,10 @@ index 2c689edf..0c36ab52 100644
      @Getter
      private String displayName;
 diff --git a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
-index d1654bcc..cfd25859 100644
+index b83903df..2e1c6a4c 100644
 --- a/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
 +++ b/proxy/src/main/java/net/md_5/bungee/connection/DownstreamBridge.java
-@@ -50,6 +50,8 @@ import net.md_5.bungee.protocol.PacketWrapper;
+@@ -51,6 +51,8 @@ import net.md_5.bungee.protocol.PacketWrapper;
  import net.md_5.bungee.protocol.ProtocolConstants;
  import net.md_5.bungee.protocol.packet.BossBar;
  import net.md_5.bungee.protocol.packet.Commands;
@@ -206,7 +208,7 @@ index d1654bcc..cfd25859 100644
  import net.md_5.bungee.protocol.packet.KeepAlive;
  import net.md_5.bungee.protocol.packet.Kick;
  import net.md_5.bungee.protocol.packet.PlayerListItem;
-@@ -595,6 +597,32 @@ public class DownstreamBridge extends PacketHandler
+@@ -615,6 +617,32 @@ public class DownstreamBridge extends PacketHandler
          }
      }
  
@@ -277,5 +279,5 @@ index d15044f4..bea2bbff 100644
       * Sends the server mod list to the client, or stores it for sending later.
       *
 -- 
-2.26.1
+2.27.0
 

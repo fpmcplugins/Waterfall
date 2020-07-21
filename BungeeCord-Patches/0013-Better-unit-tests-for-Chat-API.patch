@@ -1,14 +1,14 @@
-From 4d2ab0a0763157aa7018b8db62964ad865455d0a Mon Sep 17 00:00:00 2001
+From 914e63b8024182183a313a03f1d72b4bd8bd3681 Mon Sep 17 00:00:00 2001
 From: Tux <write@imaginarycode.com>
 Date: Thu, 19 May 2016 17:36:31 -0600
 Subject: [PATCH] Better unit tests for Chat API
 
 
 diff --git a/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java b/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-index df38e297..563b6911 100644
+index 23fa3024..c4a7ee5e 100644
 --- a/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
 +++ b/chat/src/test/java/net/md_5/bungee/api/chat/ComponentsTest.java
-@@ -322,6 +322,26 @@ public class ComponentsTest
+@@ -450,6 +450,26 @@ public class ComponentsTest
          Assert.assertEquals( eventRetention[1].getClickEvent(), testClickEvent );
      }
  
@@ -53,5 +53,5 @@ index 9e37eed0..a25a01b8 100644
 +    }
  }
 -- 
-2.24.1
+2.25.1
 
